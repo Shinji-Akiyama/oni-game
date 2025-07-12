@@ -36,6 +36,16 @@ class GameClient {
         this.renderer = new Renderer(this.canvas, this.config);
         this.inputManager = new InputManager(this);
         
+        // スクロールを完全に防ぐ
+        window.addEventListener('wheel', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+        
+        // タッチでのスクロールも防ぐ
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+        
         // Enterキーでゲーム開始
         const playerNameInput = document.getElementById('playerName');
         if (playerNameInput) {

@@ -16,13 +16,19 @@ class InputManager {
     setupKeyboardControls() {
         document.addEventListener('keydown', (e) => {
             if (e && e.key) {
-                this.keys[e.key.toLowerCase()] = true;
+                const key = e.key.toLowerCase();
+                // 矢印キーとWASDでのスクロールを防ぐ
+                if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'].includes(key)) {
+                    e.preventDefault();
+                }
+                this.keys[key] = true;
             }
         });
         
         document.addEventListener('keyup', (e) => {
             if (e && e.key) {
-                this.keys[e.key.toLowerCase()] = false;
+                const key = e.key.toLowerCase();
+                this.keys[key] = false;
             }
         });
     }
