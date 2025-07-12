@@ -247,7 +247,10 @@ class GameLogic {
 
         const room = this.gameState.rooms[roomId];
         const player = room.players.find(p => p.id === socket.id);
-        if (!player || room.gameStatus !== 'playing') return;
+        if (!player || room.gameStatus !== 'playing') {
+            console.log('Input rejected - player:', !!player, 'gameStatus:', room?.gameStatus);
+            return;
+        }
         
         // 変身中は移動不可
         if (player.transforming || player.canMove === false) return;

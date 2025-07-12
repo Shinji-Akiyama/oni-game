@@ -103,6 +103,7 @@ class GameClient {
 
         // ゲーム開始
         this.socket.on('game_started', (data) => {
+            console.log('Game started:', data);
             this.gameState.players = data.players;
             this.renderer.setMapData(data.mapData);
             this.updatePlayerList();
@@ -113,6 +114,12 @@ class GameClient {
         this.socket.on('game_state', (data) => {
             this.gameState = data;
             this.updateUI();
+            
+            // 自分の位置を確認
+            const myPlayer = data.players?.find(p => p.id === this.playerId);
+            if (myPlayer) {
+                console.log('My position:', myPlayer.x, myPlayer.y);
+            }
         });
 
         // 実況メッセージ
