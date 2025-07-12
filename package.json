@@ -1,0 +1,24 @@
+{
+  "name": "oni-game",
+  "version": "1.0.0",
+  "description": "OniChase - 青鬼風マルチプレイヤーゲーム",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js",
+    "dev": "nodemon server/app.js"
+  },
+  "engines": {
+    "node": ">=14.x",
+    "npm": ">=6.x"
+  },
+  "keywords": ["game", "multiplayer", "websocket"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
