@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OniChase - 青鬼風ゲーム</title>
+    <title>Yama in Red - 赤い悪夢</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <div class="game-container">
         <div id="startScreen" class="start-screen">
-            <h1>🏛️ OniChase 🏃‍♂️</h1>
-            <p>館の中で鬼から逃げ回れ！</p>
+            <h1>🩸 Yama in Red 🩸</h1>
+            <p style="color: #ff6666; font-style: italic;">赤き悪夢が、お前を狩る...</p>
             <input type="text" id="playerName" class="name-input" placeholder="プレイヤー名を入力" maxlength="10">
             <br>
             <button class="start-button" onclick="startGame()">ゲーム開始</button>
@@ -30,25 +30,25 @@
                     <div class="controls">
                         WASD または矢印キーで移動 | 鬼に捕まると自分も鬼になります
                     </div>
+                    
+                    <!-- モバイル用仮想パッド -->
+                    <div class="mobile-controls">
+                        <div class="virtual-pad" id="virtualPad">
+                            <div class="pad-center"></div>
+                            <div class="pad-stick" id="padStick"></div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="player-list">
                     <h3>プレイヤー一覧</h3>
                     <div id="playerList"></div>
                 </div>
-            </div>
-            
-            <!-- 実況テキスト -->
-            <div class="commentary" id="commentary">
-                <div class="commentary-title">📺 実況</div>
-                <div id="commentaryContent"></div>
-            </div>
-            
-            <!-- モバイル用仮想パッド -->
-            <div class="mobile-controls">
-                <div class="virtual-pad" id="virtualPad">
-                    <div class="pad-center"></div>
-                    <div class="pad-stick" id="padStick"></div>
+                
+                <!-- 実況テキスト -->
+                <div class="commentary" id="commentary">
+                    <div class="commentary-title">📺 実況</div>
+                    <div id="commentaryContent"></div>
                 </div>
             </div>
         </div>

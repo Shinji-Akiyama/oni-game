@@ -10,23 +10,31 @@ body {
 }
 
 .game-container {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
     height: 100vh;
     overflow: hidden;
     position: relative;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
 .game-main {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 1fr 250px 280px;
+    gap: 15px;
+    flex: 1;
+    align-items: start;
+    max-height: calc(100vh - 100px);
 }
 
 .game-area {
-    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .game-info {
@@ -44,16 +52,15 @@ body {
     display: block;
     margin: 0 auto;
     cursor: pointer;
+    max-width: 100%;
+    height: auto;
 }
 
 .player-list {
-    width: 250px;
     padding: 15px;
     background-color: #333;
     border-radius: 5px;
-    position: sticky;
-    top: 20px;
-    max-height: 600px;
+    max-height: 100%;
     overflow-y: auto;
 }
 
@@ -89,32 +96,33 @@ body {
 
 .mobile-controls {
     display: none;
-    position: fixed;
+    position: absolute;
     bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 200px;
-    height: 200px;
+    left: 20px;
+    width: 150px;
+    height: 150px;
+    z-index: 200;
 }
 
 .virtual-pad {
     position: relative;
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
     border-radius: 50%;
     touch-action: none;
+    opacity: 0.8;
 }
 
 .pad-stick {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background: rgba(255, 255, 255, 0.8);
     border-radius: 50%;
-    top: 70px;
-    left: 70px;
+    top: 50px;
+    left: 50px;
     transition: none;
     pointer-events: none;
 }
@@ -125,20 +133,19 @@ body {
     height: 10px;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 50%;
-    top: 95px;
-    left: 95px;
+    top: 70px;
+    left: 70px;
     pointer-events: none;
 }
 
 @media (max-width: 1400px) {
     .game-main {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
     }
     
-    .player-list {
-        width: 100%;
-        position: static;
-        margin-top: 20px;
+    .player-list, .commentary {
+        max-height: 200px;
     }
 }
 
@@ -158,23 +165,80 @@ body {
         display: none;
     }
     
-    .game-canvas {
-        max-width: 100%;
-        height: auto;
-    }
-    
-    body {
-        padding: 10px;
-    }
-    
     .game-container {
-        max-width: 100%;
+        padding: 5px;
+    }
+    
+    .game-main {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .game-area {
+        position: relative;
+    }
+    
+    .game-canvas {
+        width: 100%;
+        height: auto;
+        max-height: 60vh;
+    }
+    
+    .player-list, .commentary {
+        max-height: 150px;
+        font-size: 14px;
+    }
+    
+    .player-list h3, .commentary-title {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    
+    .game-info {
+        font-size: 14px;
+        padding: 8px;
     }
 }
 
 .start-screen, .lobby-screen {
     text-align: center;
     padding: 50px;
+}
+
+.start-screen {
+    background: radial-gradient(ellipse at center, #1a0000 0%, #000000 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.start-screen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="50" font-size="100" fill="%23ff000020" opacity="0.1">血</text></svg>') repeat;
+    animation: bloodDrip 20s linear infinite;
+}
+
+@keyframes bloodDrip {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+.start-screen h1 {
+    font-family: 'Courier New', monospace;
+    color: #ff0000;
+    text-shadow: 0 0 10px #ff0000, 0 0 20px #800000, 0 0 30px #400000;
+    animation: flicker 2s infinite;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
 }
 
 .name-input {
@@ -188,16 +252,24 @@ body {
 
 .start-button {
     padding: 15px 30px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
+    background-color: #8b0000;
+    color: #fff;
+    border: 2px solid #ff0000;
     border-radius: 5px;
     cursor: pointer;
     font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    position: relative;
+    z-index: 1;
 }
 
 .start-button:hover {
-    background-color: #45a049;
+    background-color: #ff0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+    transform: scale(1.05);
 }
 
 .result-screen {
@@ -261,17 +333,12 @@ body {
 }
 
 .commentary {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 250px;
-    max-height: 200px;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     border: 2px solid #666;
     border-radius: 5px;
-    padding: 10px;
+    padding: 15px;
     overflow-y: auto;
-    z-index: 100;
+    max-height: 100%;
 }
 
 .commentary-title {
@@ -310,15 +377,6 @@ body {
     to { opacity: 1; transform: translateX(0); }
 }
 
-@media (max-width: 768px) {
-    .commentary {
-        top: 80px;
-        right: 10px;
-        width: 200px;
-        max-height: 150px;
-        font-size: 14px;
-    }
-}
 
 .room-list {
     margin: 20px 0;

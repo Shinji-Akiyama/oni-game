@@ -256,6 +256,8 @@ class Renderer {
                 if (player.id === viewerPlayer.id) {
                     this.ctx.strokeStyle = '#FFD700';
                     this.ctx.lineWidth = 3;
+                    this.ctx.beginPath();
+                    this.ctx.arc(player.x, player.y, this.config.PLAYER_SIZE/2, 0, Math.PI * 2);
                     this.ctx.stroke();
                 }
 
