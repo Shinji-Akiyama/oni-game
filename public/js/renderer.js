@@ -202,41 +202,42 @@ class Renderer {
                 }
                 
                 // プレイヤー本体の描画
-                const image = player.type === 'oni' ? this.images.oni : this.images.player;
-                
-                if (image && image.complete) {
-                    // 画像がある場合は画像を描画
-                    const size = 40;
-                    this.ctx.save();
-                    
-                    // プレイヤーの位置に移動
-                    this.ctx.translate(player.x, player.y);
-                    
-                    // 左向きの場合は反転
-                    if (player.direction === 'left') {
-                        this.ctx.scale(-1, 1);
-                    }
-                    
-                    // 変身中は少し揺れる
-                    if (player.transforming) {
-                        const shake = Math.sin(Date.now() * 0.1) * 2;
-                        this.ctx.translate(shake, 0);
-                    }
-                    
-                    this.ctx.drawImage(
-                        image,
-                        -size/2,
-                        -size/2,
-                        size,
-                        size
-                    );
-                    this.ctx.restore();
+                if (player.type === 'oni') {
+                    // 鬼は常にカスタム描画
+                    this.drawOni(player);
                 } else {
-                    // 鬼の場合は特別な描画
-                    if (player.type === 'oni') {
-                        this.drawOni(player);
+                    // プレイヤーの描画
+                    const image = this.images.player;
+                    
+                    if (image && image.complete) {
+                        // 画像がある場合は画像を描画
+                        const size = 40;
+                        this.ctx.save();
+                        
+                        // プレイヤーの位置に移動
+                        this.ctx.translate(player.x, player.y);
+                        
+                        // 左向きの場合は反転
+                        if (player.direction === 'left') {
+                            this.ctx.scale(-1, 1);
+                        }
+                        
+                        // 変身中は少し揺れる
+                        if (player.transforming) {
+                            const shake = Math.sin(Date.now() * 0.1) * 2;
+                            this.ctx.translate(shake, 0);
+                        }
+                        
+                        this.ctx.drawImage(
+                            image,
+                            -size/2,
+                            -size/2,
+                            size,
+                            size
+                        );
+                        this.ctx.restore();
                     } else {
-                        // 通常のプレイヤーは円で描画
+                        // 画像がない場合は円で描画
                         const radius = this.config.PLAYER_SIZE/2;
                         this.ctx.beginPath();
                         this.ctx.arc(player.x, player.y, radius, 0, Math.PI * 2);
