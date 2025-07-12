@@ -204,15 +204,15 @@ class Renderer {
                 // プレイヤー本体の描画
                 const image = player.type === 'oni' ? this.images.oni : this.images.player;
                 
-                if (image && image.complete) {
-                    // 画像がある場合は画像を描画
-                    const size = player.type === 'oni' ? 45 : 40;  // 大きめのサイズに変更
+                if (image && image.complete && player.type !== 'oni') {
+                    // プレイヤー画像がある場合は画像を描画（鬼以外）
+                    const size = 40;
                     this.ctx.save();
                     
                     // プレイヤーの位置に移動
                     this.ctx.translate(player.x, player.y);
                     
-                    // 左向きの場合は反転（デバッグ用にログ追加）
+                    // 左向きの場合は反転
                     if (player.direction === 'left') {
                         this.ctx.scale(-1, 1);
                     }
@@ -232,11 +232,16 @@ class Renderer {
                     );
                     this.ctx.restore();
                 } else {
-                    // 画像がない場合は円で描画（フォールバック）
-                    const radius = player.type === 'oni' ? this.config.PLAYER_SIZE/2 + 5 : this.config.PLAYER_SIZE/2;
-                    this.ctx.beginPath();
-                    this.ctx.arc(player.x, player.y, radius, 0, Math.PI * 2);
-                    this.ctx.fill();
+                    // 鬼の場合は特別な描画
+                    if (player.type === 'oni') {
+                        this.drawOni(player);
+                    } else {
+                        // 通常のプレイヤーは円で描画
+                        const radius = this.config.PLAYER_SIZE/2;
+                        this.ctx.beginPath();
+                        this.ctx.arc(player.x, player.y, radius, 0, Math.PI * 2);
+                        this.ctx.fill();
+                    }
                 }
 
                 // 自分の場合は黄色い枠
@@ -264,6 +269,59 @@ class Renderer {
             }
     }
 
+    drawOni(player) {
+        const size = this.config.PLAYER_SIZE/2 + 5;
+        
+        // 鬼の体（赤い円）
+        this.ctx.fillStyle = '#F44336';
+        this.ctx.beginPath();
+        this.ctx.arc(player.x, player.y, size, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // 角を描く
+        this.ctx.fillStyle = '#8B0000';
+        // 左の角
+        this.ctx.beginPath();
+        this.ctx.moveTo(player.x - size * 0.5, player.y - size * 0.5);
+        this.ctx.lineTo(player.x - size * 0.6, player.y - size * 1.2);
+        this.ctx.lineTo(player.x - size * 0.3, player.y - size * 0.7);
+        this.ctx.closePath();
+        this.ctx.fill();
+        
+        // 右の角
+        this.ctx.beginPath();
+        this.ctx.moveTo(player.x + size * 0.5, player.y - size * 0.5);
+        this.ctx.lineTo(player.x + size * 0.6, player.y - size * 1.2);
+        this.ctx.lineTo(player.x + size * 0.3, player.y - size * 0.7);
+        this.ctx.closePath();
+        this.ctx.fill();
+        
+        // 目（怒った目）
+        this.ctx.fillStyle = 'white';
+        this.ctx.beginPath();
+        this.ctx.arc(player.x - size * 0.3, player.y - size * 0.1, size * 0.2, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.beginPath();
+        this.ctx.arc(player.x + size * 0.3, player.y - size * 0.1, size * 0.2, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // 黒目
+        this.ctx.fillStyle = 'black';
+        this.ctx.beginPath();
+        this.ctx.arc(player.x - size * 0.3, player.y - size * 0.1, size * 0.1, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.beginPath();
+        this.ctx.arc(player.x + size * 0.3, player.y - size * 0.1, size * 0.1, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // 怖い口
+        this.ctx.strokeStyle = 'black';
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        this.ctx.arc(player.x, player.y + size * 0.2, size * 0.4, 0.2 * Math.PI, 0.8 * Math.PI);
+        this.ctx.stroke();
+    }
+    
     renderVisionMask(player) {
         const gradient = this.ctx.createRadialGradient(
             this.config.CANVAS_WIDTH / 2, this.config.CANVAS_HEIGHT / 2, this.config.VISION_RADIUS * 0.8,

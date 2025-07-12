@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Oni Image</title>
+</head>
+<body>
+    <canvas id="canvas" width="128" height="128"></canvas>
+    <br>
+    <button onclick="downloadImage()">Download Oni Image</button>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 背景を透明に
+        ctx.clearRect(0, 0, 128, 128);
+        
+        // 鬼の体（赤い円）
+        ctx.fillStyle = '#FF0000';
+        ctx.beginPath();
+        ctx.arc(64, 64, 40, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // 角を描く
+        ctx.fillStyle = '#8B0000';
+        // 左の角
+        ctx.beginPath();
+        ctx.moveTo(45, 40);
+        ctx.lineTo(40, 20);
+        ctx.lineTo(50, 35);
+        ctx.closePath();
+        ctx.fill();
+        
+        // 右の角
+        ctx.beginPath();
+        ctx.moveTo(83, 40);
+        ctx.lineTo(88, 20);
+        ctx.lineTo(78, 35);
+        ctx.closePath();
+        ctx.fill();
+        
+        // 目（白目）
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(50, 60, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(78, 60, 8, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // 黒目
+        ctx.fillStyle = 'black';
+        ctx.beginPath();
+        ctx.arc(50, 60, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(78, 60, 4, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // 口（怖い笑み）
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(64, 70, 15, 0.2 * Math.PI, 0.8 * Math.PI);
+        ctx.stroke();
+        
+        // 牙
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.moveTo(55, 75);
+        ctx.lineTo(57, 82);
+        ctx.lineTo(59, 75);
+        ctx.closePath();
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.moveTo(69, 75);
+        ctx.lineTo(71, 82);
+        ctx.lineTo(73, 75);
+        ctx.closePath();
+        ctx.fill();
+        
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'oni.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>
