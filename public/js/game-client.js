@@ -58,8 +58,8 @@ class GameClient {
 
         // Socket.io接続（App Engine対応）
         this.socket = io({
-            transports: ['polling'], // App Engine用にpollingのみ使用
-            upgrade: false, // WebSocketへのアップグレードを無効化
+            transports: ['polling', 'websocket'], // Cloud Runは両方サポート
+            upgrade: true, // WebSocketへのアップグレードを有効化
             reconnection: true,
             reconnectionAttempts: 5,
             reconnectionDelay: 1000

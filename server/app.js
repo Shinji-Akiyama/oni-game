@@ -11,7 +11,7 @@ const io = socketIO(server, {
         origin: "*",
         methods: ["GET", "POST"]
     },
-    transports: ['polling'], // App Engine用にpollingのみに制限
+    transports: ['polling', 'websocket'], // Cloud Runは両方サポート
     pingTimeout: 60000,
     pingInterval: 25000,
     upgradeTimeout: 30000,
