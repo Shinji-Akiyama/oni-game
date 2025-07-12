@@ -264,14 +264,14 @@ class Renderer {
                 this.ctx.font = '18px Arial';
                 this.ctx.textAlign = 'center';
                 const displayName = player.name === '👹 鬼' ? '👹' : player.name;
-                const nameOffset = image && image.complete ? 25 : this.config.PLAYER_SIZE/2 + 10;
+                const nameOffset = player.type === 'oni' ? 30 : 25;
                 this.ctx.fillText(displayName, player.x, player.y - nameOffset);
                 
                 // 変身中の「！」マーク
                 if (player.transforming) {
                     this.ctx.fillStyle = '#FFFF00';
                     this.ctx.font = 'bold 32px Arial';
-                    const markOffset = image && image.complete ? 40 : this.config.PLAYER_SIZE/2 + 25;
+                    const markOffset = player.type === 'oni' ? 45 : 40;
                     this.ctx.fillText('！', player.x, player.y - markOffset);
                 }
             }
