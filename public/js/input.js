@@ -22,7 +22,6 @@ class InputManager {
                     e.preventDefault();
                 }
                 this.keys[key] = true;
-                console.log('Key pressed:', key);
             }
         });
         

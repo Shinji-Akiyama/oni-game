@@ -248,7 +248,6 @@ class GameLogic {
         const room = this.gameState.rooms[roomId];
         const player = room.players.find(p => p.id === socket.id);
         if (!player || room.gameStatus !== 'playing') {
-            console.log('Input rejected - player:', !!player, 'gameStatus:', room?.gameStatus);
             return;
         }
         

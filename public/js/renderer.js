@@ -5,6 +5,11 @@ class Renderer {
         this.config = config;
         this.mapData = null;
         this.images = {};
+        
+        // キャンバスサイズを設定
+        this.canvas.width = config.CANVAS_WIDTH;
+        this.canvas.height = config.CANVAS_HEIGHT;
+        
         this.loadImages();
     }
     
@@ -35,7 +40,9 @@ class Renderer {
         this.ctx.fillRect(0, 0, this.config.CANVAS_WIDTH, this.config.CANVAS_HEIGHT);
 
         let player = gameState.players.find(p => p.id === playerId);
-        if (!player) return;
+        if (!player) {
+            return;
+        }
         
         // ローカルプレイヤーの位置を使用（よりスムーズな動き）
         if (localPlayerPos && player.id === playerId) {

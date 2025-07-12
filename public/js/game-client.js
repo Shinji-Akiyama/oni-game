@@ -75,7 +75,6 @@ class GameClient {
             reconnectionDelay: 1000
         });
         
-        console.log('Socket.io connecting...');
         
         // イベントリスナー設定
         this.setupSocketListeners();
@@ -90,7 +89,6 @@ class GameClient {
     setupSocketListeners() {
         // 参加成功
         this.socket.on('join_success', (data) => {
-            console.log('Join success:', data);
             this.playerId = data.playerId;
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('gameScreen').style.display = 'block';
@@ -103,7 +101,6 @@ class GameClient {
 
         // ゲーム開始
         this.socket.on('game_started', (data) => {
-            console.log('Game started:', data);
             this.gameState.players = data.players;
             this.renderer.setMapData(data.mapData);
             this.updatePlayerList();
@@ -115,11 +112,6 @@ class GameClient {
             this.gameState = data;
             this.updateUI();
             
-            // 自分の位置を確認
-            const myPlayer = data.players?.find(p => p.id === this.playerId);
-            if (myPlayer) {
-                console.log('My position:', myPlayer.x, myPlayer.y);
-            }
         });
 
         // 実況メッセージ
@@ -195,7 +187,6 @@ class GameClient {
         
         // 入力がある場合のみ送信
         if (input.keys || input.mobileInput || input.mouseInput) {
-            console.log('Sending input:', input);
             this.socket.emit('player_input', input);
             this.lastInputTime = currentTime;
         }
