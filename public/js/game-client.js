@@ -58,8 +58,8 @@ class GameClient {
 
         // Socket.io接続（App Engine対応）
         this.socket = io({
-            transports: ['polling', 'websocket'],
-            upgrade: true,
+            transports: ['polling'], // App Engine用にpollingのみ使用
+            upgrade: false, // WebSocketへのアップグレードを無効化
             reconnection: true,
             reconnectionAttempts: 5,
             reconnectionDelay: 1000
@@ -98,13 +98,6 @@ class GameClient {
 
         // ゲーム状態更新
         this.socket.on('game_state', (data) => {
-            // デバッグ: 最初のプレイヤーの方向を確認
-            if (data.players && data.players.length > 0) {
-                const myPlayer = data.players.find(p => p.id === this.playerId);
-                if (myPlayer && myPlayer.direction) {
-                    console.log('Player direction:', myPlayer.direction);
-                }
-            }
             this.gameState = data;
             this.updateUI();
         });
