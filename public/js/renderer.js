@@ -204,8 +204,8 @@ class Renderer {
                 // プレイヤー本体の描画
                 const image = player.type === 'oni' ? this.images.oni : this.images.player;
                 
-                if (image && image.complete && player.type !== 'oni') {
-                    // プレイヤー画像がある場合は画像を描画（鬼以外）
+                if (image && image.complete) {
+                    // 画像がある場合は画像を描画
                     const size = 40;
                     this.ctx.save();
                     
