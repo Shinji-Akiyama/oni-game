@@ -7,6 +7,7 @@ class AIController {
 
     updateAI(player, gameState) {
         if (!player || !player.isAI) return;
+        if (!gameState || !gameState.players) return;
         
         // 変身中は移動不可
         if (player.transforming || player.canMove === false) return;

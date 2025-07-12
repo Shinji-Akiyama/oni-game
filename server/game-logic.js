@@ -237,6 +237,7 @@ class GameLogic {
         });
         } catch (error) {
             console.error('Error in updateGame:', error);
+            console.error('Stack trace:', error.stack);
         }
     }
 
@@ -358,13 +359,15 @@ class GameLogic {
 
     checkInfections(roomId) {
         const room = this.gameState.rooms[roomId];
-        const onis = room.players.filter(p => p.type === 'oni');
-        const humans = room.players.filter(p => p.type === 'human');
+        if (!room || !room.players) return;
+        
+        const onis = room.players.filter(p => p.type === 'oni' && !p.transforming);
+        const humans = room.players.filter(p => p.type === 'human' && !p.transforming);
 
         onis.forEach(oni => {
             humans.forEach(human => {
                 const distance = Math.hypot(oni.x - human.x, oni.y - human.y);
-                if (distance < CONFIG.INFECTION_DISTANCE && !human.transforming) {
+                if (distance < CONFIG.INFECTION_DISTANCE && !human.transforming && human.type === 'human') {
                     // 変身開始
                     human.transforming = true;
                     human.transformStartTime = Date.now();
@@ -390,19 +393,25 @@ class GameLogic {
                     
                     // 1.5秒後に変身完了
                     setTimeout(() => {
-                        if (room.players.includes(human)) {
-                            human.type = 'oni';
-                            human.transforming = false;
-                            human.canMove = true;
+                        // ルームの存在確認
+                        const currentRoom = this.gameState.rooms[roomId];
+                        if (!currentRoom) return;
+                        
+                        // プレイヤーの存在確認
+                        const humanPlayer = currentRoom.players.find(p => p.id === human.id);
+                        if (humanPlayer && humanPlayer.transforming) {
+                            humanPlayer.type = 'oni';
+                            humanPlayer.transforming = false;
+                            humanPlayer.canMove = true;
                             
                             // 鬼になったプレイヤーに膠着状態検知システムを初期化
-                            human.stuckTime = 0;
-                            human.lastPosition = { x: human.x, y: human.y };
-                            human.stuckCheckTimer = 0;
-                            human.aiTarget = null;
+                            humanPlayer.stuckTime = 0;
+                            humanPlayer.lastPosition = { x: humanPlayer.x, y: humanPlayer.y };
+                            humanPlayer.stuckCheckTimer = 0;
+                            humanPlayer.aiTarget = null;
                             
                             this.io.to(roomId).emit('player_infected', {
-                                playerId: human.id,
+                                playerId: humanPlayer.id,
                                 infectorId: oni.id
                             });
                         }
