@@ -364,17 +364,28 @@ class GameLogic {
         const onis = room.players.filter(p => p.type === 'oni' && !p.transforming);
         const humans = room.players.filter(p => p.type === 'human' && !p.transforming);
 
+        // 処理中のプレイヤーIDを記録（重複処理を防ぐ）
+        const processingPlayers = new Set();
+        
         onis.forEach(oni => {
             humans.forEach(human => {
+                // 既に処理中の場合はスキップ
+                if (processingPlayers.has(human.id)) return;
+                
                 const distance = Math.hypot(oni.x - human.x, oni.y - human.y);
                 if (distance < CONFIG.INFECTION_DISTANCE && !human.transforming && human.type === 'human') {
+                    processingPlayers.add(human.id);
                     // 変身開始
                     human.transforming = true;
                     human.transformStartTime = Date.now();
                     human.canMove = false; // 移動不可
                     
+                    // IDを保存（参照エラーを防ぐため）
+                    const humanId = human.id;
+                    const oniId = oni.id;
+                    
                     // 捕獲者の捕獲数を増やす
-                    oni.captureCount++;
+                    oni.captureCount = (oni.captureCount || 0) + 1;
                     
                     // 実況メッセージ
                     const capturerName = oni.name === '👹 鬼' ? '鬼' : oni.name;
@@ -387,8 +398,8 @@ class GameLogic {
                     
                     // 変身エフェクト開始を通知
                     this.io.to(roomId).emit('player_transforming', {
-                        playerId: human.id,
-                        infectorId: oni.id
+                        playerId: humanId,
+                        infectorId: oniId
                     });
                     
                     // 1.5秒後に変身完了
@@ -397,8 +408,8 @@ class GameLogic {
                         const currentRoom = this.gameState.rooms[roomId];
                         if (!currentRoom) return;
                         
-                        // プレイヤーの存在確認
-                        const humanPlayer = currentRoom.players.find(p => p.id === human.id);
+                        // プレイヤーの存在確認（IDで検索）
+                        const humanPlayer = currentRoom.players.find(p => p.id === humanId);
                         if (humanPlayer && humanPlayer.transforming) {
                             humanPlayer.type = 'oni';
                             humanPlayer.transforming = false;
@@ -412,7 +423,7 @@ class GameLogic {
                             
                             this.io.to(roomId).emit('player_infected', {
                                 playerId: humanPlayer.id,
-                                infectorId: oni.id
+                                infectorId: oniId
                             });
                         }
                     }, 1500);
