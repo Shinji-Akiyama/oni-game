@@ -28,7 +28,7 @@ class GameClient {
         this.inputInterval = 1000 / 60; // 60 FPS for input（サーバーと同じ）
         this.lastInput = null;
         this.localPlayerPosition = null;
-        this.inputSending = false;
+        this.inputIntervalId = null;
     }
 
     init() {
@@ -153,6 +153,11 @@ class GameClient {
             cancelAnimationFrame(this.animationId);
         }
         
+        // 既存の入力インターバルがある場合はクリア
+        if (this.inputIntervalId) {
+            clearInterval(this.inputIntervalId);
+        }
+        
         const gameLoop = () => {
             // 描画（60 FPS）
             this.renderer.render(this.gameState, this.playerId);
@@ -161,7 +166,7 @@ class GameClient {
         };
         
         // 入力処理をサーバーと同じ60FPSで実行
-        setInterval(() => {
+        this.inputIntervalId = setInterval(() => {
             this.processInput();
         }, 1000 / 60); // 60FPSで入力チェック（サーバーと同じ）
         
@@ -169,7 +174,7 @@ class GameClient {
     }
     
     processInput() {
-        if (!this.socket || !this.socket.connected || this.inputSending) return;
+        if (!this.socket || !this.socket.connected) return;
         
         const currentTime = Date.now();
         
