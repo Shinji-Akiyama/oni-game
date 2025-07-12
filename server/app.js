@@ -10,7 +10,12 @@ const io = socketIO(server, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
-    }
+    },
+    transports: ['polling', 'websocket'],
+    pingTimeout: 60000,
+    pingInterval: 25000,
+    upgradeTimeout: 30000,
+    allowEIO3: true
 });
 
 // CSPヘッダーを設定（開発環境用）

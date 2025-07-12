@@ -56,8 +56,14 @@ class GameClient {
             return;
         }
 
-        // Socket.io接続
-        this.socket = io();
+        // Socket.io接続（App Engine対応）
+        this.socket = io({
+            transports: ['polling', 'websocket'],
+            upgrade: true,
+            reconnection: true,
+            reconnectionAttempts: 5,
+            reconnectionDelay: 1000
+        });
         
         // イベントリスナー設定
         this.setupSocketListeners();

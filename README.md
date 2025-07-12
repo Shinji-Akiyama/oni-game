@@ -20,7 +20,7 @@ npm run dev
 
 3. ブラウザでアクセス
 ```
-http://localhost:3000
+http://localhost:8080
 ```
 
 ## ゲームの遊び方
