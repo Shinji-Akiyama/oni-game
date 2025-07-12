@@ -41,8 +41,8 @@ class GameClient {
             e.preventDefault();
         }, { passive: false });
         
-        // タッチでのスクロールも防ぐ
-        document.addEventListener('touchmove', (e) => {
+        // ゲームキャンバス上でのタッチスクロールのみ防ぐ
+        this.canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
         }, { passive: false });
         
