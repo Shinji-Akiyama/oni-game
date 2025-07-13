@@ -45,6 +45,7 @@ io.on('connection', (socket) => {
     // プレイヤー参加
     socket.on('join_game', (data) => {
         const { playerName, roomId = 'default' } = data;
+        console.log('受信したプレイヤー名:', playerName, '長さ:', playerName ? playerName.length : 0);
         gameLogic.joinGame(socket, playerName, roomId);
     });
 

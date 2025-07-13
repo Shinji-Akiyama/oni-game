@@ -12,7 +12,7 @@
         <div id="startScreen" class="start-screen">
             <h1>🩸 Yama in Red 🩸</h1>
             <p style="color: #ff6666; font-style: italic;">赤き悪夢が、お前を狩る...</p>
-            <input type="text" id="playerName" class="name-input" placeholder="プレイヤー名を入力" maxlength="10">
+            <input type="text" id="playerName" class="name-input" placeholder="プレイヤー名を入力" maxlength="10" oninput="console.log('入力中:', this.value, '長さ:', this.value.length)">
             <br>
             <button class="start-button" onclick="startGame()">ゲーム開始</button>
         </div>

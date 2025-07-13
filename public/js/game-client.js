@@ -61,6 +61,9 @@ class GameClient {
         const nameInput = document.getElementById('playerName');
         const playerName = nameInput.value.trim();
         
+        console.log('入力された名前:', playerName);
+        console.log('名前の長さ:', playerName.length);
+        
         if (!playerName) {
             alert('プレイヤー名を入力してください');
             return;
@@ -219,7 +222,13 @@ class GameClient {
             }
 
             const name = document.createElement('span');
-            name.textContent = `${player.name}${player.id === this.playerId ? ' (YOU)' : ''}`;
+            const displayText = `${player.name}${player.id === this.playerId ? ' (YOU)' : ''}`;
+            name.textContent = displayText;
+            
+            // デバッグ用
+            if (player.id === this.playerId) {
+                console.log('プレイヤーリストに表示される名前:', player.name);
+            }
 
             item.appendChild(icon);
             item.appendChild(name);

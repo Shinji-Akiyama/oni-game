@@ -28,6 +28,9 @@ class GameLogic {
     }
 
     joinGame(socket, playerName, roomId) {
+        console.log('受信したプレイヤー名:', playerName);
+        console.log('プレイヤー名の長さ:', playerName.length);
+        
         // ルームが存在しない場合は作成
         if (!this.gameState.rooms[roomId]) {
             this.createRoom(roomId);

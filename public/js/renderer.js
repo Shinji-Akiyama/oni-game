@@ -266,6 +266,12 @@ class Renderer {
                 this.ctx.font = '18px Arial';
                 this.ctx.textAlign = 'center';
                 const displayName = player.name === '👹 鬼' ? '👹' : player.name;
+                
+                // デバッグ用
+                if (player.id === viewerPlayer.id && displayName !== '👹') {
+                    console.log('Canvas上に描画される名前:', displayName);
+                }
+                
                 const nameOffset = player.type === 'oni' ? 30 : 25;
                 this.ctx.fillText(displayName, player.x, player.y - nameOffset);
                 
