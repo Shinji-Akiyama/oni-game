@@ -102,45 +102,45 @@ body {
 
 .mobile-controls {
     display: none;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 120px;
-    height: 120px;
+    position: fixed;
+    bottom: 160px;
+    right: 10px;
+    width: 100px;
+    height: 100px;
     z-index: 200;
 }
 
 .virtual-pad {
     position: relative;
-    width: 120px;
-    height: 120px;
-    background: rgba(255, 255, 255, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.4);
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     touch-action: none;
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .pad-stick {
     position: absolute;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.8);
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.7);
     border-radius: 50%;
-    top: 40px;
-    left: 40px;
+    top: 32.5px;
+    left: 32.5px;
     transition: none;
     pointer-events: none;
 }
 
 .pad-center {
     position: absolute;
-    width: 10px;
-    height: 10px;
-    background: rgba(255, 255, 255, 0.5);
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 50%;
-    top: 55px;
-    left: 55px;
+    top: 46px;
+    left: 46px;
     pointer-events: none;
 }
 
@@ -175,12 +175,15 @@ body {
         padding: 0;
         height: 100vh;
         height: 100dvh;
+        width: 100%;
+        overflow: hidden;
     }
     
     #gameScreen {
         display: flex;
         flex-direction: column;
         height: 100%;
+        width: 100%;
         overflow: hidden;
     }
     
@@ -188,14 +191,17 @@ body {
         font-size: 12px;
         padding: 5px 10px;
         margin-bottom: 0;
+        flex-shrink: 0;
     }
     
     .game-main {
         display: flex;
         flex-direction: column;
-        height: calc(100% - 40px);
+        flex: 1;
         gap: 0;
         padding: 0;
+        min-height: 0;
+        width: 100%;
     }
     
     .game-area {
@@ -205,7 +211,8 @@ body {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 10px;
+        padding: 5px;
+        width: 100%;
     }
     
     .game-canvas {
@@ -217,35 +224,50 @@ body {
     }
     
     .sidebar {
-        height: auto;
-        max-height: 35vh;
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-        padding: 10px;
-        background-color: rgba(0, 0, 0, 0.8);
+        width: 100%;
+        height: 150px;
+        min-height: 150px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+        padding: 5px;
+        background-color: rgba(0, 0, 0, 0.9);
+        box-sizing: border-box;
+        flex-shrink: 0;
     }
     
     .player-list, .commentary {
-        flex: 1;
-        max-height: 100%;
-        font-size: 12px;
-        padding: 10px;
+        width: 100%;
+        height: 100%;
+        font-size: 11px;
+        padding: 8px;
         margin: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        background-color: rgba(51, 51, 51, 0.8);
+        border-radius: 3px;
     }
     
     .player-list h3, .commentary-title {
-        font-size: 14px;
+        font-size: 13px;
         margin: 0 0 5px 0;
+        position: sticky;
+        top: 0;
+        background-color: rgba(51, 51, 51, 0.95);
+        padding: 2px 0;
     }
     
     .player-item {
         font-size: 11px;
-        margin: 3px 0;
+        margin: 2px 0;
+        display: flex;
+        align-items: center;
     }
     
     .commentary-item {
         font-size: 11px;
+        padding: 2px 0;
     }
     
     .start-screen {
