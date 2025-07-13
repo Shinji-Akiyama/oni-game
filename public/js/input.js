@@ -56,7 +56,7 @@ class InputManager {
             const x = touch.clientX - rect.left - this.padCenterX;
             const y = touch.clientY - rect.top - this.padCenterY;
             
-            const distance = Math.min(Math.sqrt(x * x + y * y), 70);
+            const distance = Math.min(Math.sqrt(x * x + y * y), 50);
             const angle = Math.atan2(y, x);
             
             const stickX = Math.cos(angle) * distance;
@@ -65,8 +65,8 @@ class InputManager {
             padStick.style.transform = `translate(${stickX}px, ${stickY}px)`;
             
             // 入力値を正規化
-            this.mobileInput.x = distance > 10 ? stickX / 70 : 0;
-            this.mobileInput.y = distance > 10 ? stickY / 70 : 0;
+            this.mobileInput.x = distance > 10 ? stickX / 50 : 0;
+            this.mobileInput.y = distance > 10 ? stickY / 50 : 0;
         };
         
         const handleEnd = (e) => {
