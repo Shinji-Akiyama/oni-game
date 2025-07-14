@@ -42,10 +42,17 @@ const gameLogic = new GameLogic(io);
 io.on('connection', (socket) => {
     console.log('New player connected:', socket.id);
 
+    // ルーム一覧取得
+    socket.on('get_rooms', () => {
+        const rooms = gameLogic.getRoomList();
+        socket.emit('room_list', rooms);
+    });
+
     // プレイヤー参加
     socket.on('join_game', (data) => {
         const { playerName, roomId = 'default' } = data;
         console.log('受信したプレイヤー名:', playerName, '長さ:', playerName ? playerName.length : 0);
+        console.log('ルームID:', roomId);
         gameLogic.joinGame(socket, playerName, roomId);
     });
 

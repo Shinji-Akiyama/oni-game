@@ -57,17 +57,10 @@ class GameClient {
         }
     }
 
-    startGame() {
-        const nameInput = document.getElementById('playerName');
-        const playerName = nameInput.value.trim();
-        
+    connect(playerName, roomId = 'default') {
         console.log('入力された名前:', playerName);
         console.log('名前の長さ:', playerName.length);
-        
-        if (!playerName) {
-            alert('プレイヤー名を入力してください');
-            return;
-        }
+        console.log('ルームID:', roomId);
 
         // Socket.io接続（App Engine対応）
         this.socket = io({
@@ -85,8 +78,21 @@ class GameClient {
         // ゲームに参加
         this.socket.emit('join_game', { 
             playerName: playerName,
-            roomId: 'default' // デフォルトルーム
+            roomId: roomId
         });
+    }
+    
+    startGame() {
+        // 後方互換性のため残す
+        const nameInput = document.getElementById('playerName');
+        const playerName = nameInput.value.trim();
+        
+        if (!playerName) {
+            alert('プレイヤー名を入力してください');
+            return;
+        }
+        
+        this.connect(playerName, 'default');
     }
 
     setupSocketListeners() {
@@ -366,8 +372,111 @@ class GameClient {
     }
 }
 
-// グローバルインスタンス
+// グローバル変数と関数
 let gameClient = null;
+let currentPlayerName = '';
+let socket = null;
+
+function showRoomSelect() {
+    const playerName = document.getElementById('playerName').value.trim();
+    if (!playerName) {
+        alert('プレイヤー名を入力してください');
+        return;
+    }
+    
+    currentPlayerName = playerName;
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('roomSelectScreen').style.display = 'flex';
+    
+    // Socket接続してルーム一覧を取得
+    if (!socket) {
+        socket = io({
+            transports: ['polling', 'websocket'],
+            upgrade: true,
+            reconnection: true
+        });
+        
+        socket.on('room_list', (rooms) => {
+            updateRoomList(rooms);
+        });
+        
+        socket.emit('get_rooms');
+    }
+}
+
+function updateRoomList(rooms) {
+    const roomListDiv = document.getElementById('roomList');
+    roomListDiv.innerHTML = '';
+    
+    if (rooms.length === 0) {
+        roomListDiv.innerHTML = '<p style="color: #666;">アクティブなルームがありません</p>';
+        return;
+    }
+    
+    rooms.forEach(room => {
+        const roomDiv = document.createElement('div');
+        roomDiv.className = 'room-item';
+        roomDiv.innerHTML = `
+            <div class="room-info">
+                <div class="room-name">ルーム: ${room.id}</div>
+                <div class="room-players">${room.playerCount}/10 プレイヤー</div>
+            </div>
+            <button class="join-button" onclick="joinRoomById('${room.id}')" ${room.playerCount >= 10 ? 'disabled' : ''}>
+                ${room.playerCount >= 10 ? '満員' : '参加'}
+            </button>
+        `;
+        roomListDiv.appendChild(roomDiv);
+    });
+}
+
+function createNewRoom() {
+    const roomId = generateRoomId();
+    startGameWithRoom(roomId);
+}
+
+function joinRoom() {
+    const roomCode = document.getElementById('roomCodeInput').value.trim();
+    if (!roomCode) {
+        alert('ルームコードを入力してください');
+        return;
+    }
+    startGameWithRoom(roomCode);
+}
+
+function joinRoomById(roomId) {
+    startGameWithRoom(roomId);
+}
+
+function startGameWithRoom(roomId) {
+    document.getElementById('roomSelectScreen').style.display = 'none';
+    document.getElementById('gameScreen').style.display = 'block';
+    
+    gameClient = new GameClient();
+    gameClient.connect(currentPlayerName, roomId);
+}
+
+function generateRoomId() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let roomId = '';
+    for (let i = 0; i < 6; i++) {
+        roomId += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return roomId;
+}
+
+function backToStart() {
+    document.getElementById('roomSelectScreen').style.display = 'none';
+    document.getElementById('startScreen').style.display = 'block';
+}
+
+function startGame() {
+    // 互換性のため残す
+    showRoomSelect();
+}
+
+function restartGame() {
+    location.reload();
+}
 
 // 初期化
 document.addEventListener('DOMContentLoaded', () => {

@@ -519,6 +519,21 @@ class GameLogic {
         return mapData[tileY][tileX] === 1 || mapData[tileY][tileX] === 2;
     }
 
+    getRoomList() {
+        const rooms = [];
+        Object.keys(this.gameState.rooms).forEach(roomId => {
+            const room = this.gameState.rooms[roomId];
+            if (room && room.gameStatus !== 'finished') {
+                rooms.push({
+                    id: roomId,
+                    playerCount: room.players.filter(p => !p.isAI).length,
+                    status: room.gameStatus
+                });
+            }
+        });
+        return rooms;
+    }
+
     handleDisconnect(socket) {
         const roomId = socket.roomId;
         if (!roomId || !this.gameState.rooms[roomId]) return;

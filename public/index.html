@@ -14,7 +14,22 @@
             <p style="color: #ff6666; font-style: italic;">赤き悪夢が、お前を狩る...</p>
             <input type="text" id="playerName" class="name-input" placeholder="プレイヤー名を入力" maxlength="10" oninput="console.log('入力中:', this.value, '長さ:', this.value.length)">
             <br>
-            <button class="start-button" onclick="startGame()">ゲーム開始</button>
+            <button class="start-button" onclick="showRoomSelect()">次へ</button>
+        </div>
+        
+        <div id="roomSelectScreen" class="room-select-screen" style="display: none;">
+            <h2>ルームを選択</h2>
+            <div class="room-options">
+                <button class="room-button" onclick="createNewRoom()">🎮 新しいルームを作成</button>
+                <div class="room-divider">または</div>
+                <input type="text" id="roomCodeInput" class="room-input" placeholder="ルームコードを入力" maxlength="6">
+                <button class="room-button" onclick="joinRoom()">👥 ルームに参加</button>
+            </div>
+            <div id="activeRooms" class="active-rooms">
+                <h3>アクティブなルーム</h3>
+                <div id="roomList" class="room-list"></div>
+            </div>
+            <button class="back-button" onclick="backToStart()">戻る</button>
         </div>
         
         <div id="gameScreen" style="display: none;">
